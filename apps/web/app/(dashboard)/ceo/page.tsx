@@ -15,7 +15,9 @@ import {
   Sliders,
   DollarSign,
   ArrowRight,
-  Bot
+  Bot,
+  Copy,
+  Check
 } from "lucide-react";
 import { sendCeoChat, getCeoHistory, listProjects } from "@/lib/api";
 
@@ -210,8 +212,20 @@ export default function CeoCommandCenterPage() {
                       ? "bg-[#0066FF] text-white shadow-glow-blue rounded-tr-none"
                       : "bg-[#111827] text-slate-200 border border-[#1F293D] rounded-tl-none"
                   }`}>
-                    <div className="font-semibold text-[11px] opacity-80 mb-1">
-                      {isUser ? "Founder & Owner" : "Alex Vance — AI CEO"}
+                    <div className="flex items-center justify-between font-semibold text-[11px] opacity-80 mb-1">
+                      <span>{isUser ? "Founder & Owner" : "Alex Vance — AI CEO"}</span>
+                      {!isUser && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            navigator.clipboard.writeText(m.content);
+                          }}
+                          className="hover:text-[#00D2FF] text-slate-400 p-1 rounded transition-colors"
+                          title="Copy deliverable content"
+                        >
+                          <Copy className="w-3.5 h-3.5" />
+                        </button>
+                      )}
                     </div>
 
                     <div className="whitespace-pre-wrap leading-relaxed">{m.content}</div>
@@ -230,14 +244,30 @@ export default function CeoCommandCenterPage() {
 
                         <div className="space-y-2">
                           {plan.tasks.map((task: any, idx: number) => (
-                            <div key={idx} className="p-2.5 rounded-lg bg-[#0B0F17]/80 border border-[#1F293D] flex items-center justify-between gap-3">
+                            <div
+                              key={idx}
+                              onClick={() => {
+                                setInputMessage(`Execute task: ${task.title}`);
+                              }}
+                              title="Click to execute this specialist deliverable"
+                              className="p-2.5 rounded-lg bg-[#0B0F17]/80 border border-[#1F293D] hover:border-[#0066FF] hover:bg-[#111827] cursor-pointer flex items-center justify-between gap-3 group transition-all"
+                            >
                               <div className="min-w-0">
-                                <div className="font-semibold text-white truncate">{task.title}</div>
-                                <div className="text-[10px] text-[#00D2FF] font-mono">{task.agent_id}</div>
+                                <div className="font-semibold text-white truncate group-hover:text-[#00D2FF] transition-colors">
+                                  {task.title}
+                                </div>
+                                <div className="text-[10px] text-slate-400 font-mono flex items-center gap-2">
+                                  <span className="text-[#00D2FF]">{task.agent_id}</span>
+                                  <span>•</span>
+                                  <span className="text-slate-500 group-hover:text-slate-300">Click to execute</span>
+                                </div>
                               </div>
-                              <span className="text-[10px] px-2 py-0.5 rounded font-semibold bg-[#0066FF]/20 text-[#00D2FF] border border-[#0066FF]/30 shrink-0">
-                                {task.priority}
-                              </span>
+                              <div className="flex items-center gap-2 shrink-0">
+                                <span className="text-[10px] px-2 py-0.5 rounded font-semibold bg-[#0066FF]/20 text-[#00D2FF] border border-[#0066FF]/30">
+                                  {task.priority}
+                                </span>
+                                <Play className="w-3.5 h-3.5 text-[#00D2FF] group-hover:translate-x-0.5 transition-transform" />
+                              </div>
                             </div>
                           ))}
                         </div>

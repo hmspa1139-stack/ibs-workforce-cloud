@@ -43,7 +43,31 @@ export class VercelWorkflowEngine {
     let summary = "Cross-functional agency execution coordinated by the AI CEO.";
     let rawTasks: { id: string; agentId: string; title: string; desc: string; deps: string[]; priority: any; out: string }[] = [];
 
-    if (lower.includes("ecommerce") || lower.includes("e-commerce") || lower.includes("store") || lower.includes("shop")) {
+    if (lower.includes("pizza") || lower.includes("restaurant") || lower.includes("cafe") || lower.includes("food") || lower.includes("burger") || lower.includes("bakery")) {
+      projectName = lower.includes("pizza") ? "Artisan Pizza Parlor & Online Storefront" : "Culinary Online Storefront & Ordering System";
+      summary = "High-converting online ordering storefront with appetizing menu catalog, cart checkout, local Google Maps SEO, and targeted Meta ads.";
+      rawTasks = [
+        { id: "task_1", agentId: "agent_business_analyst", title: "Pizza Storefront Architecture & Digital Menu Specifications", desc: "Define online ordering flows, toppings customizer, delivery radius, and payment gateway specifications.", deps: [], priority: "high", out: "Menu & Ordering FRD" },
+        { id: "task_2", agentId: "agent_uiux_designer", title: "Artisan Pizza UI Layout, Menu Grid & Brand Tokens", desc: "Design appetite-stimulating color palette, mobile-first menu grid, and order review modal.", deps: ["task_1"], priority: "high", out: "Tailwind UI Tokens & Wireframe Deck" },
+        { id: "task_3", agentId: "agent_seo_specialist", title: "Local Restaurant Schema & Google Maps Local SEO Matrix", desc: "Restaurant JSON-LD schema, local keyword optimization, delivery area keywords, and OpenGraph tags.", deps: ["task_1"], priority: "medium", out: "Local Restaurant SEO Matrix" },
+        { id: "task_4", agentId: "agent_fullstack_developer", title: "Build Interactive Pizza Shop Web Application", desc: "Implement production Next.js/Tailwind landing page with cart state, mobile navigation, and responsive menu.", deps: ["task_1", "task_2"], priority: "high", out: "Production Storefront Code Package" },
+        { id: "task_5", agentId: "agent_meta_ads", title: "Local Foodie Meta Ads & Instagram Conversion Campaign", desc: "High-ROAS Instagram reels/stories ad copy, local 5-mile geo-targeting, and promotional discount angle.", deps: ["task_1"], priority: "medium", out: "Meta Ads Copy & Creative Brief" },
+        { id: "task_6", agentId: "agent_qa_engineer", title: "Order Flow & Mobile Responsiveness Playwright Audit", desc: "Execute automated verification on cart checkout journey, cross-device responsiveness, and load times.", deps: ["task_4"], priority: "urgent", out: "QA Verification Certificate" },
+      ];
+    } else if (lower.includes("landing page") || lower.includes("landing") || lower.includes("website") || lower.includes("portfolio")) {
+      const topicMatch = objective.match(/(?:for|about)\s+([^,.]+)/i);
+      const topic = topicMatch ? topicMatch[1].trim() : "Custom Initiative";
+      projectName = `${topic.charAt(0).toUpperCase() + topic.slice(1)} Conversion Landing Page`;
+      summary = `High-converting responsive landing page for ${topic} with hero value proposition, social proof, and lead capture.`;
+      rawTasks = [
+        { id: "task_1", agentId: "agent_product_manager", title: "Landing Page Architecture & Conversion Funnel Specs", desc: `Map user journey, CTA positioning, and lead capture hooks for ${topic}.`, deps: [], priority: "high", out: "Conversion Funnel Specifications" },
+        { id: "task_2", agentId: "agent_uiux_designer", title: "Landing Page Visual Design & Tailwind Tokens", desc: "Modern typography, hero hierarchy, social proof grid, and interactive elements.", deps: ["task_1"], priority: "high", out: "UI Design Deck & Tokens" },
+        { id: "task_3", agentId: "agent_content_copywriter", title: "Direct-Response Conversion Copywriting", desc: "Craft headline formulas, benefit bullet points, objection handling, and CTA copy.", deps: ["task_1"], priority: "high", out: "Sales Copy Deck" },
+        { id: "task_4", agentId: "agent_fullstack_developer", title: "Implement Production Landing Page Web App", desc: "Code responsive Next.js/HTML component with fast edge delivery and analytics hooks.", deps: ["task_1", "task_2", "task_3"], priority: "high", out: "Production Landing Page Source" },
+        { id: "task_5", agentId: "agent_seo_specialist", title: "Technical On-Page SEO & Metadata Strategy", desc: "Title tags, meta descriptions, canonical URLs, and structured data schema.", deps: ["task_4"], priority: "medium", out: "SEO Strategy & Tags" },
+        { id: "task_6", agentId: "agent_qa_engineer", title: "Lighthouse Performance & Mobile Responsiveness QA", desc: "Verify sub-second load times, accessibility, and zero-defect rendering.", deps: ["task_4"], priority: "urgent", out: "QA Acceptance Certificate" },
+      ];
+    } else if (lower.includes("ecommerce") || lower.includes("e-commerce") || lower.includes("store") || lower.includes("shop")) {
       projectName = "E-Commerce Cloud Storefront";
       summary = "Turnkey online storefront with product catalog, cart checkout, SEO optimization, and Meta ad campaign.";
       rawTasks = [
