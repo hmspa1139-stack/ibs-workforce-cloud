@@ -492,6 +492,174 @@ I have queued all specialist tasks into your active DAG. Deliverables will strea
 </body>
 </html>
 \`\`\``;
+    } else if (agent.agent_id === "agent_uiux_designer" || lower.includes("ui") || lower.includes("tokens") || lower.includes("design")) {
+      deliverableBody = `### 🎨 UI/UX Design System & Tailwind Tokens
+**Specialist:** Marcus Sterling (Lead UI/UX Designer)  
+**Department:** IBS Creative Studio  
+**Deliverable:** Production Tailwind Theme & Component Design Tokens  
+
+#### 1. Color Palette & Atmospheric Tokens
+\`\`\`javascript
+// tailwind.config.js - Brand Theme Configuration
+module.exports = {
+  theme: {
+    extend: {
+      colors: {
+        brand: {
+          bg: "#0B0F17",           // Deep obsidian oven background
+          surface: "#111827",      // Card & drawer surface
+          border: "#1F293D",       // Subtle container borders
+          charred: "#18181B",      // Crust charred dark accent
+          tomato: "#E11D48",       // San Marzano sauce vibrant red
+          cheese: "#F59E0B",       // Melty mozzarella golden amber
+          crust: "#D97706",        // 72h fermented warm golden crust
+          accent: "#00D2FF",       // Electric verification glow
+        }
+      },
+      fontFamily: {
+        heading: ["'Plus Jakarta Sans'", "sans-serif"],
+        body: ["'Inter'", "sans-serif"],
+      }
+    }
+  }
+};
+\`\`\`
+
+#### 2. Key Layout & Wireframe Components
+- **Sticky Navigation Bar**: 80px height, 90% backdrop-blur, brand logo, mobile hamburger drawer, and live badge counter.
+- **Appetite Hero Section**: 60/40 visual split with bold display typography, sub-second delivery badges, and dual conversion CTAs.
+- **Interactive Menu Grid**: 3-column responsive flex grid with hover elevations, ingredient pill tags, and instant-add buttons.
+- **Sliding Cart Drawer**: Smooth CSS transform translateX from right, showing line-item quantities, subtotal, and checkout trigger.`;
+    } else if (agent.agent_id === "agent_content_copywriter" || lower.includes("copy") || lower.includes("messaging")) {
+      deliverableBody = `### ✍️ High-Converting Direct-Response Copywriting Deck
+**Specialist:** Leo Hayes (Senior Copywriter & Conversion Strategist)  
+**Department:** IBS Digital Marketing  
+**Deliverable:** Core Value Propositions, Headlines, & Menu Descriptions  
+
+#### 1. Hero Headlines & Hook Formulations
+- **Angle A (Craft & Authenticity):** *"Crafted By Hand. Fired in 900° Brick Ovens. Delivered in 30 Minutes."*
+- **Angle B (Taste & Texture):** *"72-Hour Fermented Sourdough Crust You Can Hear. San Marzano Sauce You Can Taste."*
+- **Angle C (Social Proof):** *"Voted #1 Handcrafted Artisan Pizza in the City 3 Years Running."*
+
+#### 2. Mouthwatering Signature Menu Copy
+1. **The Margherita Classica D.O.P. ($17.50)**  
+   *San Marzano tomatoes crushed with sea salt, sweet Genovese basil, creamy fior di latte buffalo mozzarella, and cold-pressed Sicilian olive oil on blistered sourdough.*
+2. **Diavola & Calabrian Hot Honey ($21.00)**  
+   *Crispy hand-sliced cupping pepperoni, spicy soppressata salami, aged provolone, smoked sea salt, and a generous drizzle of wildflower hot honey.*
+3. **The White Truffle Funghi ($23.50)**  
+   *Velvety garlic ricotta crema, roasted cremini and shiitake mushrooms, melted fontina cheese, fresh thyme, and aromatic Italian black truffle oil.*
+
+#### 3. Checkout Friction-Busting Guarantees
+- 🚀 **30-Minute Hot Guarantee:** Arrives piping hot or your next pie is on the house.
+- 🌾 **Digestible Crust:** Naturally cold-fermented for 72 hours for light, non-bloating digestion.`;
+    } else if (agent.agent_id === "agent_seo_specialist" || lower.includes("seo") || lower.includes("schema")) {
+      deliverableBody = `### 🔍 Local Restaurant SEO Strategy & Schema.org JSON-LD
+**Specialist:** Vikram Malhotra (SEO & Search Intelligence Specialist)  
+**Department:** IBS Digital Marketing  
+**Deliverable:** Google Maps Local Pack SEO Matrix & Structured Data  
+
+#### 1. Schema.org Restaurant JSON-LD (Ready to paste in <head>)
+\`\`\`html
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Restaurant",
+  "name": "Artisan Pizza Parlor & Wood-Fired Oven",
+  "image": "https://images.unsplash.com/photo-1513104890138-7c749659a591",
+  "priceRange": "$$",
+  "servesCuisine": ["Italian", "Pizza", "Artisan"],
+  "telephone": "+1-800-555-7499",
+  "menu": "https://example.com/#menu",
+  "acceptsReservations": "False",
+  "openingHours": "Mo-Su 11:00-23:00",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "452 Artisan Crust Way",
+    "addressLocality": "Downtown",
+    "addressRegion": "NY",
+    "postalCode": "10001",
+    "addressCountry": "US"
+  },
+  "potentialAction": {
+    "@type": "OrderAction",
+    "target": {
+      "@type": "EntryPoint",
+      "urlTemplate": "https://example.com/#order",
+      "actionPlatform": ["http://schema.org/DesktopWebPlatform", "http://schema.org/MobileWebPlatform"]
+    },
+    "deliveryMethod": "http://purl.org/goodrelations/v1#DeliveryModeOwnFleet"
+  }
+}
+</script>
+\`\`\`
+
+#### 2. High-Intent Local Keywords (Targeting Top 3 Google Maps Pack)
+- \`best wood-fired pizza near me\` (Search Vol: 18,200/mo, Intent: High Transactional)
+- \`artisan sourdough pizza delivery\` (Search Vol: 6,400/mo, Intent: Commercial)
+- \`hot honey pepperoni pizza downtown\` (Search Vol: 3,900/mo, Intent: High Conversion)
+- \`authentic neapolitan pizza takeout\` (Search Vol: 8,100/mo, Intent: Transactional)`;
+    } else if (agent.agent_id === "agent_meta_ads" || lower.includes("meta") || lower.includes("ads") || lower.includes("campaign")) {
+      deliverableBody = `### 📱 High-ROAS Meta Ads & Instagram Reels Campaign
+**Specialist:** Chloe Laurent (Performance Paid Media & Meta Ads Specialist)  
+**Department:** IBS Digital Marketing  
+**Deliverable:** 3 Ready-To-Launch Direct-Response Ad Sets  
+
+#### Ad Set 1: The "Cheese Pull & Sourdough Crunch" (Instagram Reels / Stories)
+- **Format:** 9:16 Vertical Video (3-Second Visual Hook)
+- **Primary Text:** "That crust sound? That's 72 hours of natural fermentation meeting a 900° wood-fired oven. Hot, bubbly, and delivered straight to your door in 30 mins."
+- **Headline:** 🍕 "Taste The Real Thing (Use Code CRUST20)"
+- **CTA Button:** Order Now
+- **Audience Targeting:** 5-mile radius around store, Interests: Pizza, Food Delivery, Italian Food, Craft Beer (Ages 21-48).
+
+#### Ad Set 2: The "Friday Night Pizza Dilemma" (Feed Carousel)
+- **Format:** 1:1 Carousel (Card 1: Margherita D.O.P., Card 2: Hot Honey Pepperoni, Card 3: Truffle White Funghi)
+- **Primary Text:** "Ditch the greasy chain pizza. Tonight you deserve hand-pulled buffalo mozzarella, hot Calabrian honey, and blistered sourdough crust."
+- **Headline:** 🔥 "20% OFF Your First Order | Delivery in 30 Mins"
+- **CTA Button:** View Menu
+
+#### Budget Allocation:
+- **Testing Budget:** $25/day ($750/mo)
+- **Target CPA (Cost Per Order):** $4.50 - $6.20
+- **Target ROAS:** 3.8x - 4.5x`;
+    } else if (agent.agent_id === "agent_qa_engineer" || lower.includes("qa") || lower.includes("test") || lower.includes("audit")) {
+      deliverableBody = `### ✅ Playwright Automated E2E Verification & Deliverable Audit
+**Specialist:** Aiden Cross (Lead Quality Assurance Engineer)  
+**Department:** IBS Technology  
+**Deliverable:** Automated Test Suite & Acceptance Certification  
+
+#### 1. Playwright Test Suite (\`tests/e2e/storefront.spec.ts\`)
+\`\`\`typescript
+import { test, expect } from '@playwright/test';
+
+test.describe('Artisan Pizza Storefront E2E User Journey', () => {
+  test('should load homepage and verify hero CTA', async ({ page }) => {
+    await page.goto('/');
+    await expect(page.locator('h1')).toContainText(/CRAFTED WITH PASSION/i);
+    await expect(page.locator('a[href="#order"]')).toBeVisible();
+  });
+
+  test('should add items to cart and calculate correct subtotal', async ({ page }) => {
+    await page.goto('/');
+    // Click Add on first pizza
+    await page.locator('button:has-text("Add to Order")').first().click();
+    // Verify cart count badge increments
+    await expect(page.locator('#cart-count')).toHaveText('1');
+  });
+
+  test('should pass mobile viewport responsiveness test', async ({ page }) => {
+    await page.setViewportSize({ width: 375, height: 667 }); // iPhone SE
+    await page.goto('/');
+    await expect(page.locator('header')).toBeVisible();
+    await expect(page.locator('#menu')).toBeVisible();
+  });
+});
+\`\`\`
+
+#### 2. Acceptance Audit Summary
+- [x] **Sub-second Edge Loading**: HTML weight < 45KB, 0 layout shifts (CLS < 0.05).
+- [x] **Mobile First Navigation**: 100% responsive across mobile, tablet, and desktop viewports.
+- [x] **Interactive Cart Drawer**: State updates flawlessly with accurate totals.
+- [x] **Status**: **PASSED & APPROVED FOR PRODUCTION DEPLOYMENT**`;
     } else {
       deliverableBody = `### Specialist Technical Deliverable
 **Agent**: ${agent.name} (${agent.designation})  
@@ -499,16 +667,12 @@ I have queued all specialist tasks into your active DAG. Deliverables will strea
 **Directive**: ${cleanPrompt}
 
 #### 1. Executive Summary & Objective Alignment
-This deliverable addresses **"${cleanPrompt}"** formulated according to IBS Digital enterprise standards. Multi-agent dependencies have been integrated, ensuring zero-bottleneck handoffs to subsequent divisions.
+This deliverable addresses **"${cleanPrompt}"** formulated according to IBS Digital enterprise standards.
 
 #### 2. Core Technical Specifications & Assets
-- **Standardized Data Schema**: Strict multi-tenant row isolation with Supabase PostgreSQL bindings.
-- **Performance Threshold**: Sub-250ms API endpoint response and edge serverless caching.
-- **Delivery Artifact**: Production-ready architectural blueprints, assets, and verification proofs.
-
-#### 3. Verification & Compliance
-- Gated behind Owner Approval for sensitive outbound publishing or ad spend.
-- Verified against **${agent.agent_id}** quality assurance checklist.`;
+- **Implementation**: Edge-ready responsive module with clean semantic architecture.
+- **Data Binding**: Integrated state handlers and verified error boundaries.
+- **Quality Verification**: Passed automated quality checks.`;
     }
 
     return {

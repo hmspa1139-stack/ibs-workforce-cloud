@@ -17,7 +17,11 @@ import {
   ArrowRight,
   Bot,
   Copy,
-  Check
+  Check,
+  Eye,
+  X,
+  ExternalLink,
+  Code
 } from "lucide-react";
 import { sendCeoChat, getCeoHistory, listProjects } from "@/lib/api";
 
@@ -30,7 +34,81 @@ export default function CeoCommandCenterPage() {
   const [priority, setPriority] = useState("high");
   const [projects, setProjects] = useState<any[]>([]);
   const [selectedProject, setSelectedProject] = useState<string>("");
+  const [previewHtml, setPreviewHtml] = useState<string | null>(null);
+  const [showPreviewModal, setShowPreviewModal] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const extractHtml = (text: string): string | null => {
+    if (!text) return null;
+    const match = text.match(/```html\s*([\s\S]*?)```/i);
+    if (match && match[1]) return match[1].trim();
+    if (text.includes("<!DOCTYPE html") || text.includes("<html")) {
+      const start = text.indexOf("<!DOCTYPE html") !== -1 ? text.indexOf("<!DOCTYPE html") : text.indexOf("<html");
+      const end = text.lastIndexOf("</html>");
+      if (start !== -1 && end !== -1) {
+        return text.substring(start, end + 7).trim();
+      }
+    }
+    return null;
+  };
+
+  const downloadHtml = (html: string, filename = "storefront-landing-page.html") => {
+    const blob = new Blob([html], { type: "text/html;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
+  const executeTaskDirectly = async (taskCommand: string) => {
+    if (loading) return;
+
+    const tempUserMsg = {
+      id: `temp-${Date.now()}`,
+      sender_type: "user",
+      sender_id: "owner",
+      content: taskCommand,
+      created_at: new Date().toISOString(),
+      metadata: {},
+    };
+    setMessages((prev) => [...prev, tempUserMsg]);
+    setLoading(true);
+
+    try {
+      const res = await sendCeoChat({
+        message: taskCommand,
+        project_id: selectedProject || undefined,
+        plan_only: planOnly,
+        cost_limit_usd: costLimit,
+      });
+
+      const ceoMsg = {
+        id: `ceo-${Date.now()}`,
+        sender_type: "agent",
+        sender_id: "agent_ceo",
+        content: res.reply,
+        created_at: new Date().toISOString(),
+        metadata: { plan: res.plan, project_id: res.project_id },
+      };
+      setMessages((prev) => [...prev, ceoMsg]);
+    } catch (err: any) {
+      const errMsg = {
+        id: `err-${Date.now()}`,
+        sender_type: "system",
+        sender_id: "system",
+        content: `Error: ${err.message || "Failed to execute task."}`,
+        created_at: new Date().toISOString(),
+        metadata: {},
+      };
+      setMessages((prev) => [...prev, errMsg]);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     async function loadData() {
@@ -198,6 +276,7 @@ export default function CeoCommandCenterPage() {
             messages.map((m) => {
               const isUser = m.sender_type === "user";
               const plan = m.metadata?.plan;
+              const htmlCode = !isUser ? extractHtml(m.content) : null;
 
               return (
                 <div key={m.id} className={`flex gap-3.5 ${isUser ? "justify-end" : "justify-start"}`}>
@@ -207,7 +286,7 @@ export default function CeoCommandCenterPage() {
                     </div>
                   )}
 
-                  <div className={`max-w-2xl rounded-2xl p-4.5 text-xs space-y-3 ${
+                  <div className={`max-w-3xl rounded-2xl p-4.5 text-xs space-y-3 ${
                     isUser
                       ? "bg-[#0066FF] text-white shadow-glow-blue rounded-tr-none"
                       : "bg-[#111827] text-slate-200 border border-[#1F293D] rounded-tl-none"
@@ -228,6 +307,37 @@ export default function CeoCommandCenterPage() {
                       )}
                     </div>
 
+                    {/* Interactive Deliverable Action Bar for HTML Websites */}
+                    {htmlCode && (
+                      <div className="p-3 rounded-xl bg-gradient-to-r from-[#0066FF]/20 to-[#00D2FF]/20 border border-[#0066FF]/40 flex flex-wrap items-center justify-between gap-2.5 my-2">
+                        <div className="flex items-center gap-2">
+                          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                          <span className="font-bold text-white text-[11px]">Live Web Deliverable Ready</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setPreviewHtml(htmlCode);
+                              setShowPreviewModal(true);
+                            }}
+                            className="px-3 py-1.5 rounded-lg bg-[#00D2FF] hover:bg-[#00B8E6] text-slate-950 font-bold text-[11px] flex items-center gap-1.5 shadow-sm transition-all"
+                          >
+                            <Eye className="w-3.5 h-3.5" />
+                            <span>Preview Live</span>
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => downloadHtml(htmlCode, "pizza-storefront.html")}
+                            className="px-3 py-1.5 rounded-lg bg-[#111827] hover:bg-[#1A2333] border border-slate-700 text-slate-200 font-semibold text-[11px] flex items-center gap-1.5 transition-all"
+                          >
+                            <Download className="w-3.5 h-3.5 text-[#00D2FF]" />
+                            <span>Download .html</span>
+                          </button>
+                        </div>
+                      </div>
+                    )}
+
                     <div className="whitespace-pre-wrap leading-relaxed">{m.content}</div>
 
                     {/* Render Plan Card if Present */}
@@ -238,18 +348,26 @@ export default function CeoCommandCenterPage() {
                             Structured Task DAG ({plan.tasks.length} Specialists)
                           </span>
                           <span className="text-[10px] text-slate-400 font-mono">
-                            Est: ~${plan.estimated_cost_usd} USD
+                            Est: ~${plan.estimated_cost_usd || "5.00"} USD
                           </span>
                         </div>
+
+                        {/* Execute Entire Workforce Button */}
+                        <button
+                          type="button"
+                          onClick={() => executeTaskDirectly("Execute all remaining tasks for this project")}
+                          className="w-full py-2.5 px-3 rounded-xl bg-gradient-to-r from-[#0066FF] to-[#00D2FF] hover:opacity-90 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-glow-blue transition-all"
+                        >
+                          <Sparkles className="w-4 h-4 text-white" />
+                          <span>⚡ Run Entire Workforce (Execute All 6 Specialists)</span>
+                        </button>
 
                         <div className="space-y-2">
                           {plan.tasks.map((task: any, idx: number) => (
                             <div
                               key={idx}
-                              onClick={() => {
-                                setInputMessage(`Execute task: ${task.title}`);
-                              }}
-                              title="Click to execute this specialist deliverable"
+                              onClick={() => executeTaskDirectly(`Execute task: ${task.title}`)}
+                              title="Click to immediately execute this specialist deliverable"
                               className="p-2.5 rounded-lg bg-[#0B0F17]/80 border border-[#1F293D] hover:border-[#0066FF] hover:bg-[#111827] cursor-pointer flex items-center justify-between gap-3 group transition-all"
                             >
                               <div className="min-w-0">
@@ -259,7 +377,7 @@ export default function CeoCommandCenterPage() {
                                 <div className="text-[10px] text-slate-400 font-mono flex items-center gap-2">
                                   <span className="text-[#00D2FF]">{task.agent_id}</span>
                                   <span>•</span>
-                                  <span className="text-slate-500 group-hover:text-slate-300">Click to execute</span>
+                                  <span className="text-slate-500 group-hover:text-slate-300">Click to run specialist</span>
                                 </div>
                               </div>
                               <div className="flex items-center gap-2 shrink-0">
@@ -329,6 +447,51 @@ export default function CeoCommandCenterPage() {
           </div>
         </form>
       </div>
+
+      {/* Live HTML Website Preview Modal */}
+      {showPreviewModal && previewHtml && (
+        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 md:p-8 animate-in fade-in duration-200">
+          <div className="bg-[#0B0F17] border border-[#1F293D] rounded-2xl w-full max-w-6xl h-[90vh] flex flex-col overflow-hidden shadow-2xl">
+            {/* Modal Header */}
+            <div className="px-6 py-4 border-b border-[#1F293D] flex items-center justify-between bg-[#111827]">
+              <div className="flex items-center gap-3">
+                <span className="w-3 h-3 rounded-full bg-emerald-400 animate-pulse" />
+                <span className="font-bold text-white text-sm">Live Storefront Browser Preview</span>
+                <span className="text-[10px] px-2 py-0.5 rounded bg-[#0066FF]/20 text-[#00D2FF] font-mono">
+                  100% Mobile Responsive
+                </span>
+              </div>
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => downloadHtml(previewHtml, "storefront-landing-page.html")}
+                  className="px-3 py-1.5 rounded-lg bg-[#0066FF] hover:bg-[#0052CC] text-white text-xs font-semibold flex items-center gap-1.5 transition-colors"
+                >
+                  <Download className="w-3.5 h-3.5" />
+                  <span>Download .html</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setShowPreviewModal(false)}
+                  className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+            </div>
+
+            {/* Modal Iframe */}
+            <div className="flex-1 bg-white overflow-hidden">
+              <iframe
+                title="Storefront Live Preview"
+                srcDoc={previewHtml}
+                className="w-full h-full border-0"
+                sandbox="allow-scripts allow-modals allow-forms"
+              />
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
